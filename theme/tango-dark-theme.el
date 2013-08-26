@@ -34,8 +34,8 @@ Semantic, and Ansi-Color faces are included.")
 
 (let ((class '((class color) (min-colors 89)))
       ;; Tango palette colors.
-      (butter-1 "#fce94f") (butter-2 "#edd400") (butter-3 "#c4a000")
-      (orange-1 "#fcaf3e") (orange-2 "#f57900") (orange-3 "#ce5c00")
+      (butter-1 "#f809f5") (butter-2 "#edd400") (butter-3 "#c4a000")
+      (orange-1 "#8cc4ff") (orange-2 "#f57900") (orange-3 "#ce5c00")
       (choc-1 "#e9b96e") (choc-2 "#c17d11") (choc-3 "#8f5902")
       (cham-1 "#8ae234") (cham-2 "#73d216") (cham-3 "#4e9a06")
       (blue-1 "#729fcf") (blue-2 "#3465a4") (blue-3 "#204a87")

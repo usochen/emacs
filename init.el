@@ -33,7 +33,8 @@
 (setq inhibit-startup-message t);; 关闭启动时闪屏
 (setq visible-bell t) ;关闭出错时的提示声
 (blink-cursor-mode -1);指针不闪
-(setq make-backup-files nil) ;不产生备份文件
+;(setq-default cursor-type 'bar);光标是跟竖线
+(setq make-backup-files 0) ;不产生备份文件
 (setq default-major-mode 'text-mode) ;一打开就起用 text 模式
 (global-font-lock-mode t) ;语法高亮
 (auto-image-file-mode t) ;打开图片显示功能
@@ -43,9 +44,9 @@
 (display-time-mode 1) ;显示时间，格式如下
 (setq display-time-24hr-format t)
 (setq display-time-day-and-date t)
-(tool-bar-mode nil) ;去掉那个大大的工具栏
+(tool-bar-mode 0) ;去掉那个大大的工具栏
 ;;(scroll-bar-mode nil) ;去掉滚动条
-(mouse-avoidance-mode 'animate);光标靠近鼠标指针时，让鼠标指针自动让开
+;(mouse-avoidance-mode 'animate);光标靠近鼠标指针时，让鼠标指针自动让开
 (setq mouse-yank-at-point t) ;支持中键粘贴
 (transient-mark-mode t) ;允许临时设置标记
 (setq x-select-enable-clipboard t) ;支持emacs和外部程序的粘贴
@@ -53,7 +54,7 @@
 (setq default-fill-column 80) ;默认显示 80列就换行
 (setq bookmark-save-flag 1) ;保存书签
 (add-hook 'before-save-hook 'delete-trailing-whitespace)  ;; 删除行尾部空格
-(put 'upcase-region 'disabled nil)
+(put 'upcase-region 'disabled 0)
 
 ;; ------------------ 整行 mode ------------------
 ;;;; C-w 如果没有选中区域则删除整行
@@ -90,6 +91,7 @@
 (require 'easy-after-load)
 (add-hook 'after-init-hook 'session-initialize)
 
+
 ; after-loads/after-ruby-mode.el
 (add-hook 'ruby-mode 'yard-mode) ; shameless plug: https://github.com/pd/yard-mode.el
 (add-hook 'ruby-mode 'eldoc-mode)
@@ -100,6 +102,21 @@
 
 (load "desktop")
 (desktop-save-mode)
+
+
+;css rainbow 颜色显示
+(require 'rainbow-mode)
+(dolist (hook '(css-mode-hook html-mode-hook sass-mode-hook))
+(add-hook hook 'rainbow-turn-on))
+
+;;html css javascript同时编写
+(require 'multi-web-mode)
+(setq mweb-default-major-mode 'html-mode)
+(setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
+                  (js-mode "<script +\\(type=\"text/javascript\"\\|language=\"javascript\"\\)[^>]*>" "</script>")
+                  (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")))
+(setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
+(multi-web-global-mode 1)
 
 ;; ido
 (require 'ido)
@@ -141,19 +158,15 @@
 (require 'undo-tree)
 (global-undo-tree-mode)
 
-;;yasnippet
-(add-to-list 'load-path
-              "~/.emacs.d/lisp/yasnippet")
-(require 'yasnippet)
-(yas-global-mode 1)
-
-
-
 
 ;;自己安装的auto-complete 自动补全
 (add-to-list 'load-path "~/.emacs.d")
 (require 'auto-complete-config)
 (require 'popup)
+(global-set-key (kbd "C-c a") 'auto-complete) ;全局设置补全快捷键
+;;设置采用TAB键进行选中补全项 回车键换行不补全
+(define-key ac-completing-map "\t" 'ac-complete)
+(define-key ac-completing-map "\r" nil)
 
 (setq ac-quick-help-prefer-pos-tip t)   ;default is t
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
@@ -172,3 +185,14 @@
 ;(require 'color-theme)
 (setq load-path (cons "~/.emacs.d/theme" load-path))
 (require 'tango-dark-theme)
+
+;;启动窗口大小
+(setq default-frame-alist
+'((height . 28) (width . 120) (menu-bar-lines . 20) (tool-bar-lines . 0)))
+
+;;快速编写各种代码模板
+(add-to-list 'load-path
+             "~/.emacs.d/yasnippet-0.6.1c")
+(require 'yasnippet) ;; not yasnippet-bundle
+(yas/initialize)
+(yas/load-directory "~/.emacs.d/yasnippet-0.6.1c/snippets")
